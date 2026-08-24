@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111827">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Spider Coach">
+<title>Spider Coach</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f3f4f6;color:#111827;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+main{max-width:620px;margin:auto;padding:14px 14px 48px}.hero{background:#111827;color:#fff;border-radius:24px;padding:20px;margin-bottom:12px}
+.hero h1{margin:4px 0;font-size:29px}.muted{color:#6b7280;font-size:13px}.hero .muted{color:#cbd5e1}
+nav{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:10px}
+button{border:0;border-radius:12px;padding:11px 12px;font-weight:750;background:#fff;color:#111827;box-shadow:0 1px 3px #0001}
+.active{background:#111827;color:#fff}.tabs{display:flex;gap:7px;overflow:auto;margin:3px 0 9px}.tabs button{white-space:nowrap}
+.card{background:#fff;border-radius:20px;padding:16px;margin:10px 0;box-shadow:0 2px 12px #0000000b}
+h2{font-size:18px;margin:0 0 4px}.ex{border-top:1px solid #e5e7eb;padding:14px 0}.ex:first-child{border-top:0}
+.exrow{display:flex;justify-content:space-between;gap:10px}.name{font-weight:800}.sets{font-size:13px;color:#6b7280;margin-top:3px}.tip{font-size:12px;color:#4b5563;margin-top:5px}
+.check{width:42px;height:42px;padding:0;border-radius:50%;font-size:18px}.done{background:#16a34a;color:#fff}
+.inputs{display:flex;gap:7px;margin-top:8px}.inputs input{width:100%;padding:9px;border:1px solid #ddd;border-radius:10px;font:inherit}
+.progress{height:9px;background:#e5e7eb;border-radius:10px;overflow:hidden;margin-top:10px}.bar{height:100%;background:#16a34a}
+.big{width:100%;background:#111827;color:#fff;margin-top:10px}.timer{text-align:center;font-size:46px;font-weight:850;margin:5px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.stat{background:#f9fafb;border-radius:14px;padding:12px;margin:5px 0}
+.danger{background:#fee2e2;color:#991b1b}.small{font-size:12px;color:#6b7280}.smallbtn{margin-top:7px;padding:7px 9px;font-size:12px;background:#f3f4f6;box-shadow:none}
+</style>
+</head>
+<body>
+<main>
+<section class="hero"><div>🕷️ SPIDER COACH</div><h1>Dein Training</h1><div class="muted">Calisthenics · Hybrid · Laufen</div></section>
+<div id="nav"></div><div id="app"></div>
+</main>
+
+<script>
+const P={
+"🟢 Mit Ringen":{
+Mo:{t:"Oberkörper",f:"Push & Pull",e:[["Klimmzüge","4×5–10","1–2 Wdh. Reserve"],["Ring Push-ups","4×8–15","sauber und kontrolliert"],["Dips","3×6–12","kein Schwung"],["Ring Rows","3×8–15","Brust zu den Ringen"],["Pike Push-ups","3×6–12","Schulterfokus"],["Ring Face Pulls","3×12–20","kontrolliert"],["Ring Curls","2–3×8–15","langsam ablassen"]]},
+Mi:{t:"Cindy",f:"20 Minuten AMRAP",c:1,e:[["Klimmzüge","5",""],["Push-ups","10",""],["Air Squats","15",""]]},
+Fr:{t:"Ganzkörper",f:"Kraft",e:[["Bulgarian Split Squats","4×8–12 / Bein",""],["Nordic Curls","3×5–10","langsame Exzentrik"],["Klimmzüge","3×5–10",""],["Dips","3×8–12",""],["Ring Push-ups","3×8–15",""],["Pike Push-ups","3×8–12",""],["Hanging Knee Raises","3×10–15",""]]},
+Sa:{t:"Spider-Man Athletik",f:"Optional · 4 Runden",e:[["Push-ups","10",""],["Klimmzüge","5–8",""],["Air Squats","15",""],["Ausfallschritte","8 / Bein",""],["Burpees","8",""],["Mountain Climbers","30 Sek.",""],["Hollow Hold","20–30 Sek.",""]]}},
+"🔵 Ohne Ringe":{
+Mo:{t:"Oberkörper",f:"Bodyweight",e:[["Klimmzüge","4×5–10",""],["Push-ups","4×10–20",""],["Dips","3×6–12",""],["Australian Rows","3×8–15",""],["Pike Push-ups","3×6–12",""],["Diamond Push-ups","3×8–15",""],["Chin-ups","2×6–10",""]]},
+Mi:{t:"Cindy",f:"20 Minuten AMRAP",c:1,e:[["Klimmzüge","5",""],["Push-ups","10",""],["Air Squats","15",""]]},
+Fr:{t:"Ganzkörper",f:"Bodyweight",e:[["Bulgarian Split Squats","4×8–12 / Bein",""],["Nordic Curls","3×5–10",""],["Klimmzüge","3×5–10",""],["Dips","3×8–12",""],["Decline Push-ups","3×8–15","Füße auf Bank"],["Pike Push-ups","3×8–12",""],["Hanging Knee Raises","3×10–15",""]]},
+Sa:{t:"Spider-Man Athletik",f:"Optional · 4 Runden",e:[["Push-ups","10",""],["Klimmzüge","5–8",""],["Air Squats","15",""],["Ausfallschritte","8 / Bein",""],["Burpees","8",""],["Mountain Climbers","30 Sek.",""],["Hollow Hold","20–30 Sek.",""]]}},
+"🟠 Hybrid":{
+Mo:{t:"Oberkörper",f:"Hanteln + Calisthenics",e:[["Klimmzüge","4×5–10",""],["Bankdrücken Langhantel","4×6–10",""],["Langhantelrudern","3×6–10",""],["Dips","3×6–12",""],["KH-Schulterdrücken","3×8–12",""],["Seitheben","3×12–20",""],["KH-Curls","2–3×10–15",""]]},
+Mi:{t:"Cindy",f:"20 Minuten AMRAP",c:1,e:[["Klimmzüge","5",""],["Push-ups","10",""],["Air Squats","15",""]]},
+Fr:{t:"Ganzkörper",f:"Hybrid Kraft",e:[["Rumänisches Kreuzheben","3×6–10","Langhantel"],["Bulgarian Split Squats","3×8–12 / Bein","Kurzhanteln"],["Klimmzüge","3×5–10",""],["Dips","3×8–12",""],["Decline Push-ups","3×8–15","Füße auf Bank"],["KH-Seitheben","3×12–20",""],["Hanging Knee Raises","3×10–15",""]]},
+Sa:{t:"Spider-Man Athletik",f:"Optional · 4 Runden",e:[["Push-ups","10",""],["Klimmzüge","5–8",""],["Air Squats","15",""],["Ausfallschritte","8 / Bein",""],["Burpees","8",""],["Mountain Climbers","30 Sek.",""],["Hollow Hold","20–30 Sek.",""]]}}};
+const days={Mo:"Montag",Mi:"Mittwoch",Fr:"Freitag",Sa:"Samstag"};
+const LS="spider-v2-",today=()=>new Date().toISOString().slice(0,10);
+let page="training",plan=Object.keys(P)[0],day="Mo",timer=90,iv=null;
+let rest=parseInt(localStorage.getItem(LS+"rest")||"90");
+
+function key(){return plan+"|"+day}
+function wd(){return JSON.parse(localStorage.getItem(LS+"w|"+key())||"{}")}
+function sw(d){localStorage.setItem(LS+"w|"+key(),JSON.stringify(d))}
+function st(){return JSON.parse(localStorage.getItem(LS+"state")||'{"sessions":[],"prs":{}}')}
+function ss(s){localStorage.setItem(LS+"state",JSON.stringify(s))}
+function render(){
+document.getElementById("nav").innerHTML=[["training","💪","Training"],["progress","📈","Fortschritt"],["run","🏃","Laufen"],["more","⚙️","Mehr"]].map(x=>`<button class="${page==x[0]?'active':''}" onclick="page='${x[0]}';render()">${x[1]}<br><small>${x[2]}</small></button>`).join("");
+page=="training"?training():page=="progress"?progress():page=="run"?run():more()
+}
+function training(){
+let w=P[plan][day],d=wd(),done=d.done||[],s=st();
+let h=`<div class="tabs">${Object.keys(P).map(p=>`<button class="${p==plan?'active':''}" onclick="plan='${p}';render()">${p}</button>`).join("")}</div><div class="tabs">${Object.keys(days).map(x=>`<button class="${x==day?'active':''}" onclick="day='${x}';render()">${days[x]}</button>`).join("")}</div>`;
+h+=`<div class="card"><h2>${w.t}</h2><div class="muted">${w.f}</div><div class="progress"><div class="bar" style="width:${done.length/w.e.length*100}%"></div></div><div class="small">${done.length}/${w.e.length} Übungen · 🔥 ${streak()} Tage Streak</div>`;
+w.e.forEach((e,i)=>{let ok=done.includes(i),l=d["l"+i]||["",""],pr=s.prs[key()+"|"+i]||{};h+=`<div class="ex"><div class="exrow"><div style="flex:1"><div class="name">${e[0]}</div><div class="sets">${e[1]}</div>${e[2]?`<div class="tip">💡 ${e[2]}</div>`:""}<div class="inputs"><input inputmode="decimal" type="number" placeholder="Wdh." value="${l[0]}" onchange="saveLog(${i},0,this.value)"><input inputmode="decimal" type="number" step=".5" placeholder="kg" value="${l[1]}" onchange="saveLog(${i},1,this.value)"></div>${pr.reps||pr.kg?`<div class="small">🏆 Best: ${pr.reps?pr.reps+" Wdh. ":""}${pr.kg?pr.kg+" kg":""}</div>`:""}</div><button class="check ${ok?'done':''}" onclick="toggle(${i})">${ok?'✓':'○'}</button></div>${ok?`<button class="smallbtn" onclick="start(rest)">⏱️ ${rest}s Pause starten</button>`:""}</div>`});
+h+=`</div>`;
+if(w.c)h+=`<button class="big" onclick="start(1200)">▶ Cindy 20:00 starten</button>`;
+h+=`<div class="card"><b>⏱️ Pausentimer</b><div class="timer" id="timer">01:30</div><button onclick="start(60)">60 s</button> <button onclick="start(90)">90 s</button> <button onclick="start(120)">120 s</button></div>`;
+h+=`<div class="card"><div class="grid"><div class="stat"><b>${s.sessions.filter(x=>x.date==today()).length}</b><br><span class="muted">heute</span></div><div class="stat"><b>${s.sessions.length}</b><br><span class="muted">gesamt</span></div></div><button class="big" onclick="finish()">✅ Training abschließen</button></div>`;
+h+=`<div class="card"><b>🧠 Progression</b><p class="muted">Oberes Ende sauber geschafft → nächste Einheit etwas schwerer: mehr Wdh., schwierigere Variante oder moderat mehr Gewicht.</p></div>`;
+document.getElementById("app").innerHTML=h
+}
+function saveLog(i,j,v){let d=wd(),a=d["l"+i]||["",""];a[j]=v;d["l"+i]=a;sw(d);let s=st(),k=key()+"|"+i,p=s.prs[k]||{},n=parseFloat(v);if(j==0&&n>+(p.reps||0))p.reps=n;if(j==1&&n>+(p.kg||0))p.kg=n;s.prs[k]=p;ss(s)}
+function toggle(i){let d=wd(),a=d.done||[];a.includes(i)?a.splice(a.indexOf(i),1):a.push(i);d.done=a;sw(d);render()}
+function finish(){let d=wd(),done=d.done||[];if(!done.length){alert("Erst mindestens eine Übung abhaken.");return}let s=st(),w=P[plan][day];s.sessions.push({date:today(),time:new Date().toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"}),plan,day,title:w.t,done:done.length,total:w.e.length});ss(s);alert("Training gespeichert! 💪");render()}
+function streak(){let ds=[...new Set(st().sessions.map(x=>x.date))].sort().reverse(),n=0,base=new Date();base.setHours(0,0,0,0);for(let x of ds){let q=new Date(x);q.setHours(0,0,0,0),diff=Math.round((base-q)/86400000);if(diff==n)n++;else if(n==0&&diff==1){n=2;base=q}else break}return n}
+function progress(){let s=st(),h=`<div class="card"><h2>📈 Fortschritt</h2><div class="grid"><div class="stat"><b>${s.sessions.length}</b><br><span class="muted">Trainings</span></div><div class="stat"><b>${streak()}</b><br><span class="muted">Streak 🔥</span></div></div></div><div class="card"><h2>🏆 Bestleistungen</h2>`;let any=0;Object.entries(s.prs).forEach(([k,v])=>{if(v.reps||v.kg){any=1;let [p,d,i]=k.split("|"),name=P[p]?.[d]?.e?.[i]?.[0]||"Übung";h+=`<div class="stat"><b>${name}</b><br>${v.reps?v.reps+" Wdh. ":""}${v.kg?v.kg+" kg":""}</div>`}});if(!any)h+=`<p class="muted">Noch keine Bestleistungen.</p>`;h+=`</div><div class="card"><h2>🗓️ Historie</h2>`;s.sessions.slice().reverse().slice(0,20).forEach(x=>h+=`<div class="stat"><b>${x.date}</b> · ${x.title}<br><span class="muted">${x.plan} · ${x.done}/${x.total} Übungen · ${x.time}</span></div>`);if(!s.sessions.length)h+=`<p class="muted">Noch keine abgeschlossenen Trainings.</p>`;document.getElementById("app").innerHTML=h+"</div>"}
+function run(){document.getElementById("app").innerHTML=`<div class="card"><h2>🏃 Lauf-Walk</h2><p class="muted">Da dein Knie aktuell beim Joggen nach etwa 2 km schmerzt: nicht durch den Schmerz laufen.</p><div class="grid"><div class="stat"><b>2 min</b><br><span class="muted">joggen</span></div><div class="stat"><b>1 min</b><br><span class="muted">gehen</span></div></div><p class="muted">20–30 Minuten. Wird es schmerzhaft, abbrechen. Laufanteil langsam steigern.</p><div class="timer" id="timer">02:00</div><button onclick="start(120)">▶ 2 Min. Joggen</button> <button onclick="start(60)">▶ 1 Min. Gehen</button></div><div class="card"><h2>🦵 Knie-Kraft</h2><p class="muted">2× pro Woche, kontrolliert und schmerzarm.</p><div class="stat"><b>Step-down</b> · 2×8 / Bein</div><div class="stat"><b>Glute Bridge</b> · 3×12</div><div class="stat"><b>Wadenheben</b> · 3×15</div><div class="stat"><b>Wall Sit</b> · 3×20–30 s</div></div>`}
+function more(){document.getElementById("app").innerHTML=`<div class="card"><h2>⚙️ Mehr</h2><p class="muted">Version 2 · Daten bleiben lokal auf deinem iPhone.</p><div class="stat"><b>Standard-Pause</b><br><button onclick="setRest(60)">60 s</button> <button onclick="setRest(90)">90 s</button> <button onclick="setRest(120)">120 s</button><div class="small">Aktuell: ${rest} s</div></div><button class="danger" onclick="if(confirm('Alle Spider-Coach-Daten löschen?')){Object.keys(localStorage).filter(x=>x.startsWith('spider-')).forEach(x=>localStorage.removeItem(x));location.reload()}">Alle Trainingsdaten löschen</button></div>`}
+function setRest(x){rest=x;localStorage.setItem(LS+"rest",x);render()}
+function start(s){clearInterval(iv);timer=s;show();iv=setInterval(()=>{timer--;show();if(timer<=0){clearInterval(iv);navigator.vibrate?.([250,100,250]);alert("Pause vorbei! 💪")}},1000)}
+function show(){let e=document.getElementById("timer");if(e)e.textContent=String(Math.floor(timer/60)).padStart(2,"0")+":"+String(timer%60).padStart(2,"0")}
+render();
+</script>
+</body></html>
